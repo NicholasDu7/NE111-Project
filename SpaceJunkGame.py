@@ -98,7 +98,6 @@ def checkPointsCollision(ship, points, frenzy):
     if frenzy==False:
         if ship.colliderect(points[0]):
             points.pop(0)
-            print('complete')
             return (points, 1)
         else: return (points, 0)
     else: pass
@@ -121,7 +120,6 @@ def genBullet(ship):
 
 def iterBullets(ljunk, lbullets):
     for x in range(len(ljunk)):
-        print(range(len(lbullets)))
         for y in range(len(lbullets)):
             if y >= len(lbullets): break
             if lbullets[y].colliderect(ljunk[x]):
@@ -130,8 +128,9 @@ def iterBullets(ljunk, lbullets):
                 ljunk[x][2] = 10
                 ljunk[x][3] = 10
     for x in range(len(lbullets)):
-        lbullets[x][0] += 5
-        if lbullets[x][0] > 1100: lbullets.pop(x)
+        if x < len(lbullets):
+            lbullets[x][0] += 5
+            if lbullets[x][0] > 1100: lbullets.pop(x)
     return(ljunk, lbullets)
 
 def checkShipCollision(ship, listOfJunk): #FS checks to see if the ship has collided with space junk
