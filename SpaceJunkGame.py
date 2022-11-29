@@ -111,7 +111,7 @@ while running:
             if evnt.key == K_d: keyD = True
             if evnt.key == K_SPACE: keySpace = True
             if evnt.key == K_ESCAPE: keyEscape = True
-        #If the key is not pressed, then it will associate the specific key to False (JA)
+        #JA If the key is not pressed, then it will associate the specific key to False 
         if evnt.type == KEYUP: #FS checks if keys are no longer pressed
             if evnt.key == K_w: keyW = False
             if evnt.key == K_a: keyA = False
