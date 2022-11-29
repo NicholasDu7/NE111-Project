@@ -3,7 +3,7 @@ Original game by Faisal Shahbaz
 Date: 2022/11/01
 
 Group Members:
-Faisal Shahbaz (FS)
+Faisal Shahbaz (FS) @Faisal-Shahbaz (Github)
 Nicholas Du (ND)
 Jeniton Augustinpillai (JA)
 
