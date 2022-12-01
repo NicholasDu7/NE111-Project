@@ -41,11 +41,11 @@ frenzy = False
 ship = Rect(300, 100, 20, 20) #defines the ship as type rect
 points = [] #include 4 rectangles
 listJunk = [] #init empty list of soon-to-be junk
-listBullets = []
+listBullets = [] #FS NEW added a new list for all bullets
 scoreFont = font.SysFont("calibri",30) #fonts
 mainTitleFont = font.SysFont('calibri', 60)
 secondTitleFont = font.SysFont('calibri', 45)
-framerate = 60
+framerate = 60 #FS NEW framerate no longer constant for hard mode
 
 def drawCutscene(): #FS used in the first five seconds to generate the cutscene
     screen.blit(mainTitleFont.render('SPACE JUNK', 1, WHITE), Rect(350, 150, 50, 50)) #Title
@@ -56,7 +56,7 @@ def drawCutscene(): #FS used in the first five seconds to generate the cutscene
 
 def drawScene(shipRect, junk, life, finalScore, points, lbullets, cooldown): #FS used to draw the screen. Given all elements that must be drawn
     draw.rect(screen, BLACK, (0, 0, width, height)) #FS draws background
-    if cooldown==False:
+    if cooldown==False: #FS NEW this changes the color of our ship based on whether it is on cooldown
         draw.rect(screen, ORANGE, shipRect) #FS draws our ship
     else:
         draw.rect(screen, RED, shipRect) 
@@ -93,44 +93,44 @@ def manipulateJunk(junk): #FS moves generated space junk
         if junkItem[0] > -20: newJunk += [junkItem] #FS if the junk is off the screen, it isn't added to the new list
     return newJunk
 
-def checkPointsCollision(ship, points, frenzy):
+def checkPointsCollision(ship, points, frenzy): #FS NEW added a new method to check if the ship gets the points
     if len(points) < 1: return(points, 0)
-    if frenzy==False:
+    if frenzy==False: #FS NEW I put some redundancy for the planned 'frenzy' feature. I never got around to it. 
         if ship.colliderect(points[0]):
             points.pop(0)
-            return (points, 1)
-        else: return (points, 0)
+            return (points, 1) #FS NEW returns both the new points list (with the expended point removed) and the number of points to add. 
+        else: return (points, 0) 
     else: pass
 
-def genPoints(ship):
-    while True:
-        numx = random.randint(50,850)
+def genPoints(ship): #FS NEW generates where the points can be. 
+    while True: #FS NEW redundant. Exits after a single iteration anyway. It's just here to accomadate future features. 
+        numx = random.randint(50,850) #FS NEW The bounds are specific otherwise it's not fair
         numy = random.randint(50,650)
-        return [Rect(numx, numy, 20, 20)]
+        return [Rect(numx, numy, 20, 20)] #returns the Rect containing the appropriate coordinates
 
-def iterPoints(ship, points, frenzy, score):
-    (points, s)=checkPointsCollision(ship, points, frenzy)
+def iterPoints(ship, points, frenzy, score): #FS NEW this is the main function that's executed each frame
+    (points, s)=checkPointsCollision(ship, points, frenzy) #FS NEW calls a previous function
     score += s
-    while len(points) < 4:
-            points+=genPoints(ship)
+    while len(points) < 4: #FS NEW this doesn't need to be a loop. It was just forward planning for an unimplemented frenzy mode. 
+            points+=genPoints(ship) 
     return(points, score)
 
-def genBullet(ship):
+def genBullet(ship): #FS NEW simple funtion to place the bullets in the right spot
     return [Rect(ship[0]+20, ship[1]+5, 10, 10)]
 
-def iterBullets(ljunk, lbullets):
+def iterBullets(ljunk, lbullets): #FS NEW the main function that's executed each frame
     for x in range(len(ljunk)):
         for y in range(len(lbullets)):
-            if y >= len(lbullets): break
-            if lbullets[y].colliderect(ljunk[x]):
-                lbullets.pop(y)
-                ljunk[x][1] += ljunk[x][2]//2
+            if y >= len(lbullets): break #FS NEW prevents errors
+            if lbullets[y].colliderect(ljunk[x]): #FS NEW if the bullet hits junk
+                lbullets.pop(y) #FS NEW remove the considered bullet from the list
+                ljunk[x][1] += ljunk[x][2]//2 #FS NEW helps place the debris
                 ljunk[x][2] = 10
                 ljunk[x][3] = 10
-    for x in range(len(lbullets)):
+    for x in range(len(lbullets)): #FS NEW this loop moves the bullets acrooss the screen
         if x < len(lbullets):
             lbullets[x][0] += 5
-            if lbullets[x][0] > 1100: lbullets.pop(x)
+            if lbullets[x][0] > 1100: lbullets.pop(x) #FS NEW this deletes the bullets that leave the screen. 
     return(ljunk, lbullets)
 
 def checkShipCollision(ship, listOfJunk): #FS checks to see if the ship has collided with space junk
@@ -191,7 +191,7 @@ while running:
             ship[0] -= 5 #ND moves ship left
         if keyD == True: #FS movement
             ship[0] += 5 #ND moves ship right
-        if keySpace == True and time.get_ticks() - prevShoot > 1500:
+        if keySpace == True and time.get_ticks() - prevShoot > 1500: #FS NEW this considers the cooldown for shooting bullets
             listBullets += genBullet(ship)
             prevShoot = time.get_ticks()
         ship = checkShipOnScreen(ship) #FS calls functions neccessary for each frame
