@@ -156,14 +156,20 @@ def checkShipCollision(ship, listOfJunk): #FS checks to see if the ship has coll
 
 #JA This function prevents the ship from going off screen, which would break the game 
 def checkShipOnScreen(ship): #FS prevents the ship from moving off the screen
+    global playerX 
+    global playerY 
     if ship[0] < 0:#FS these just reset the x and y values of the ship if it were to be off the screen
         ship[0] = 0
+        playerX = 0
     if ship[0] > 980: #FS This should be dependent on (width, height) that was created at the beginning. This will be changed
         ship[0] = 980
+        playerX = 980
     if ship[1] < 0:
         ship[1] = 0
+        playerY = 0
     if ship[1] > 680:
         ship[1] = 680
+        playerY = 680
     return ship
 
 #JA Main game loop 
