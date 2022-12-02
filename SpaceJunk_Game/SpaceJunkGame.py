@@ -46,9 +46,9 @@ playerX = 295
 playerY = 91
 
 # JA Image related variables
-playerImg = transform.rotate(transform.scale(image.load("spaceShip.png"), (40,40)), 90) # JA This variable will store image of spaceship
-backgroundImg = image.load("background.png") # JA Background image
-coinImg = transform.scale(image.load("coin.png"), (25,25)) # JA Coin image
+playerImg = transform.rotate(transform.scale(image.load("SpaceJunk_Game\spaceShip.png"), (40,40)), 90) # JA This variable will store image of spaceship
+backgroundImg = image.load("SpaceJunk_Game\Background.png") # JA Background image
+coinImg = transform.scale(image.load("SpaceJunk_Game\coin.png"), (25,25)) # JA Coin image
 
 ship = Rect(300, 100, 20, 20) #defines the ship as type rect
 points = [] #include 4 rectangles
