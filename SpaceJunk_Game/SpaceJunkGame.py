@@ -45,6 +45,12 @@ frenzy = False
 playerX = 295
 playerY = 91
 
+#JA These are all the sound variables and where they are initialized (These sounds are free with no copyright )
+coinSound = mixer.Sound("SpaceJunk_Game\coinSound.wav")
+hitSound = mixer.Sound("SpaceJunk_Game\hitSound.wav")
+mixer.music.load("SpaceJunk_Game\8-bitmusic.wav")
+mixer.music.play(-1) # JA This will play the background music in a infinite loop
+
 # JA Image related variables
 playerImg = transform.rotate(transform.scale(image.load("SpaceJunk_Game\spaceShip.png"), (40,40)), 90) # JA This variable will store image of spaceship
 backgroundImg = image.load("SpaceJunk_Game\Background.png") # JA Background image
@@ -68,7 +74,7 @@ def drawCutscene(): #FS used in the first five seconds to generate the cutscene
 
 
 
-def drawScene(shipRect, junk, life, finalScore, points, lbullets, cooldown): #FS used to draw the screen. Given all elements that must be drawn
+def drawScene(shipRect, junk, life, finalScore, points, lbullets, cooldown): #FS used to draw the screen. Given all elements that must be drawn 
     screen.blit(backgroundImg, (0,0)) #JA Draws background image 
     screen.blit(playerImg, (playerX,playerY)) # JA draw player in correct location  
     # if cooldown==False: #FS NEW this changes the color of our ship based on whether it is on cooldown
@@ -84,6 +90,7 @@ def drawScene(shipRect, junk, life, finalScore, points, lbullets, cooldown): #FS
     if life == True: #FS prints score at top right
         screen.blit(scoreFont.render("%20s" %(finalScore), 1, WHITE), Rect(800, 20, 50, 50))
     if life == False: #FS prints death message
+        mixer.music.pause() # JA pauses music when game over screen pops up
         screen.blit(scoreFont.render("%20s" %(finalScore), 1, WHITE), Rect(800, 20, 50, 50))
         screen.blit(mainTitleFont.render('YOU DIED', 1, WHITE), Rect(400, 200, 200, 100))
         screen.blit(secondTitleFont.render('Final Score: %20s' %finalScore, 1, WHITE), Rect(270, 300, 50, 50))
@@ -114,6 +121,7 @@ def checkPointsCollision(ship, points, frenzy): #FS NEW added a new method to ch
     if frenzy==False: #FS NEW I put some redundancy for the planned 'frenzy' feature. I never got around to it. 
         if ship.colliderect(points[0]):
             points.pop(0)
+            coinSound.play()
             return (points, 1) #FS NEW returns both the new points list (with the expended point removed) and the number of points to add. 
         else: return (points, 0) 
     else: pass
@@ -139,6 +147,7 @@ def iterBullets(ljunk, lbullets): #FS NEW the main function that's executed each
         for y in range(len(lbullets)):
             if y >= len(lbullets): break #FS NEW prevents errors
             if lbullets[y].colliderect(ljunk[x]): #FS NEW if the bullet hits junk
+                hitSound.play()
                 lbullets.pop(y) #FS NEW remove the considered bullet from the list
                 ljunk[x][1] += ljunk[x][2]//2 #FS NEW helps place the debris
                 ljunk[x][2] = 10
@@ -201,6 +210,7 @@ while running:
             framerate = 90
 
     if (isAlive == True) and (cutscene == False): #FS while playing the game
+
         if keyW == True: 
             ship[1] -= 5 #ND moves ship up (Note origin is top left of screen and axis is flipped)
             playerY -=5
