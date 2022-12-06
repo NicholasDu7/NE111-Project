@@ -69,6 +69,7 @@ framerate = 60 #FS NEW framerate no longer constant for hard mode
 hardmode = False
 
 def drawCutscene(): #FS used in the first five seconds to generate the cutscene
+    screen.blit(backgroundImg, (0,0)) #JA Draws background image
     screen.blit(mainTitleFont.render('SPACE JUNK', 1, WHITE), Rect(356, 150, 50, 50)) #Title
     screen.blit(scoreFont.render('Navigate the drone through the space junk debris field, and collect coins', 1, WHITE), Rect(70, 250, 50, 50)) #FS Instructions
     screen.blit(scoreFont.render('Use WASD to navigate and SPACE to shoot', 1, WHITE), Rect(236, 300, 50, 50)) #FS Instructions
