@@ -34,7 +34,8 @@ keyD = False
 keySpace = False
 keyEscape = False
 keyH = False
-
+keyE = False
+keyI = False
 
 isAlive = True #FS game states
 cutscene = True
@@ -201,6 +202,8 @@ while running:
             if evnt.key == K_s: keyS = True
             if evnt.key == K_d: keyD = True
             if evnt.key == K_h: keyH = True
+            if evnt.key == K_i: keyI = True
+            if evnt.key == K_e: keyE = True
             if evnt.key == K_SPACE: keySpace = True
             if evnt.key == K_ESCAPE: keyEscape = True
   
@@ -211,6 +214,8 @@ while running:
             if evnt.key == K_s: keyS = False
             if evnt.key == K_d: keyD = False
             if evnt.key == K_h: keyH = False
+            if evnt.key == K_i: keyI = False
+            if evnt.key == K_e: keyE = False
             if evnt.key == K_SPACE: keySpace = False
             if evnt.key == K_ESCAPE: keyEscape = False
 
@@ -219,6 +224,12 @@ while running:
         drawCutscene() #JA Draws the cutscene at the beggining of the game
         if keySpace==True: cutscene = False #JA Draws cutscene for a specific amount of time
         if keyH==True:
+            cutscene = False
+            framerate = 90
+        if keyE == True: 
+            cutscene = False
+            framerate = 45
+        if keyI == True:
             cutscene = False
             framerate = 90
             hardmode = True
