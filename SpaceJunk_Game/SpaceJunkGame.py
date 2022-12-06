@@ -68,6 +68,7 @@ secondTitleFont = font.SysFont('calibri', 45)
 framerate = 60 #FS NEW framerate no longer constant for hard mode
 
 def drawCutscene(): #FS used in the first five seconds to generate the cutscene
+    screen.blit(backgroundImg, (0,0)) #JA Draws background image
     screen.blit(mainTitleFont.render('SPACE JUNK', 1, WHITE), Rect(356, 150, 50, 50)) #Title
     screen.blit(scoreFont.render('Navigate the drone through the space junk debris field, and collect coins', 1, WHITE), Rect(70, 250, 50, 50)) #FS Instructions
     screen.blit(scoreFont.render('Use WASD to navigate and SPACE to shoot', 1, WHITE), Rect(236, 300, 50, 50)) #FS Instructions
@@ -152,8 +153,8 @@ def iterBullets(ljunk, lbullets): #FS NEW the main function that's executed each
                 hitSound.play()
                 lbullets.pop(y) #FS NEW remove the considered bullet from the list
                 ljunk[x][1] += ljunk[x][2]//2 #FS NEW helps place the debris
-                ljunk[x][2] = 0
-                ljunk[x][3] = 0
+                ljunk[x][2] = 10
+                ljunk[x][3] = 10
     for x in range(len(lbullets)): #FS NEW this loop moves the bullets acrooss the screen
         if x < len(lbullets):
             lbullets[x][0] += 10
