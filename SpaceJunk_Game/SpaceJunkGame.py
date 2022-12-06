@@ -151,6 +151,7 @@ def iterBullets(ljunk, lbullets, hardmode): #FS NEW the main function that's exe
     for x in range(len(ljunk)):
         for y in range(len(lbullets)):
             if y >= len(lbullets): break #FS NEW prevents errors
+            if x >= len(ljunk): break #FS just in case
             if lbullets[y].colliderect(ljunk[x]): #FS NEW if the bullet hits junk
                 hitSound.play()
                 lbullets.pop(y) #FS NEW remove the considered bullet from the list
