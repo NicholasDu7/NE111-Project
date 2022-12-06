@@ -24,6 +24,8 @@ BLUE = (0, 0, 255)
 ORANGE = (255, 165, 0)
 myClock = time.Clock() #defines clock
 running = True #simple game state variable
+playerSpeed = 5; # JA Variable that controls players speed
+fireRate = 500; # JA Variable that controls fire rate of bullets
 
 keyA = False #FS key-related variables
 keyW = False
@@ -54,7 +56,7 @@ mixer.music.play(-1) # JA This will play the background music in a infinite loop
 # JA Image related variables
 playerImg = transform.rotate(transform.scale(image.load("SpaceJunk_Game\spaceShip.png"), (40,40)), 90) # JA This variable will store image of spaceship
 backgroundImg = image.load("SpaceJunk_Game\Background.png") # JA Background image
-coinImg = transform.scale(image.load("SpaceJunk_Game\coin.png"), (25,25)) # JA Coin image
+coinImg = transform.scale(image.load("SpaceJunk_Game\coin.png"), (30,30)) # JA Coin image
 
 ship = Rect(300, 100, 20, 20) #defines the ship as type rect
 points = [] #include 4 rectangles
@@ -66,10 +68,10 @@ secondTitleFont = font.SysFont('calibri', 45)
 framerate = 60 #FS NEW framerate no longer constant for hard mode
 
 def drawCutscene(): #FS used in the first five seconds to generate the cutscene
-    screen.blit(mainTitleFont.render('SPACE JUNK', 1, WHITE), Rect(350, 150, 50, 50)) #Title
-    screen.blit(scoreFont.render('Navigate the drone through the space junk debris field, and collect coins', 1, WHITE), Rect(75, 250, 50, 50)) #FS Instructions
-    screen.blit(scoreFont.render('Use WASD to navigate', 1, WHITE), Rect(350, 300, 50, 50)) #FS Instructions
-    screen.blit(scoreFont.render('Press SPACE to begin, press H for hard mode', 1, WHITE), Rect(220, 350, 50, 50)) #FS Instructions
+    screen.blit(mainTitleFont.render('SPACE JUNK', 1, WHITE), Rect(356, 150, 50, 50)) #Title
+    screen.blit(scoreFont.render('Navigate the drone through the space junk debris field, and collect coins', 1, WHITE), Rect(70, 250, 50, 50)) #FS Instructions
+    screen.blit(scoreFont.render('Use WASD to navigate and SPACE to shoot', 1, WHITE), Rect(236, 300, 50, 50)) #FS Instructions
+    screen.blit(scoreFont.render('Press SPACE to begin, press H for hard mode', 1, WHITE), Rect(226, 350, 50, 50)) #FS Instructions
     display.flip() #FS prints to display
 
 
@@ -130,7 +132,7 @@ def genPoints(ship): #FS NEW generates where the points can be.
     while True: #FS NEW redundant. Exits after a single iteration anyway. It's just here to accomadate future features. 
         numx = random.randint(50,850) #FS NEW The bounds are specific otherwise it's not fair
         numy = random.randint(50,650)
-        return [Rect(numx, numy, 20, 20)] #returns the Rect containing the appropriate coordinates
+        return [Rect(numx, numy, 35, 35)] #returns the Rect containing the appropriate coordinates
 
 def iterPoints(ship, points, frenzy, score): #FS NEW this is the main function that's executed each frame
     (points, s)=checkPointsCollision(ship, points, frenzy) #FS NEW calls a previous function
@@ -140,7 +142,7 @@ def iterPoints(ship, points, frenzy, score): #FS NEW this is the main function t
     return(points, score)
 
 def genBullet(ship): #FS NEW simple funtion to place the bullets in the right spot
-    return [Rect(ship[0]+20, ship[1]+5, 10, 10)]
+    return [Rect(ship[0]+20, ship[1]+5, 25, 7)]
 
 def iterBullets(ljunk, lbullets): #FS NEW the main function that's executed each frame
     for x in range(len(ljunk)):
@@ -150,11 +152,11 @@ def iterBullets(ljunk, lbullets): #FS NEW the main function that's executed each
                 hitSound.play()
                 lbullets.pop(y) #FS NEW remove the considered bullet from the list
                 ljunk[x][1] += ljunk[x][2]//2 #FS NEW helps place the debris
-                ljunk[x][2] = 10
-                ljunk[x][3] = 10
+                ljunk[x][2] = 0
+                ljunk[x][3] = 0
     for x in range(len(lbullets)): #FS NEW this loop moves the bullets acrooss the screen
         if x < len(lbullets):
-            lbullets[x][0] += 5
+            lbullets[x][0] += 10
             if lbullets[x][0] > 1100: lbullets.pop(x) #FS NEW this deletes the bullets that leave the screen. 
     return(ljunk, lbullets)
 
@@ -218,18 +220,18 @@ while running:
     if (isAlive == True) and (cutscene == False): #FS while playing the game
 
         if keyW == True: 
-            ship[1] -= 5 #ND moves ship up (Note origin is top left of screen and axis is flipped)
-            playerY -=5
+            ship[1] -= playerSpeed#ND moves ship up (Note origin is top left of screen and axis is flipped)
+            playerY -= playerSpeed
         if keyS == True:
-            ship[1] += 5 #ND moves ship down
-            playerY +=5
+            ship[1] += playerSpeed #ND moves ship down
+            playerY += playerSpeed
         if keyA == True:
-            ship[0] -= 5 #ND moves ship left
-            playerX -=5
+            ship[0] -= playerSpeed #ND moves ship left
+            playerX -= playerSpeed
         if keyD == True: #FS movement
-            ship[0] += 5 #ND moves ship right
-            playerX +=5
-        if keySpace == True and time.get_ticks() - prevShoot > 1500: #FS NEW this considers the cooldown for shooting bullets
+            ship[0] += playerSpeed #ND moves ship right
+            playerX += playerSpeed
+        if keySpace == True and time.get_ticks() - prevShoot > fireRate: #FS NEW this considers the cooldown for shooting bullets
             listBullets += genBullet(ship)
             prevShoot = time.get_ticks()
         ship = checkShipOnScreen(ship) #FS calls functions neccessary for each frame
@@ -238,7 +240,7 @@ while running:
         isAlive = checkShipCollision(ship, listJunk)
         (listJunk, listBullets) = iterBullets(listJunk, listBullets)
         (points, currentScore) = iterPoints(ship, points, frenzy, currentScore)
-        drawScene(ship, listJunk, isAlive, currentScore, points, listBullets, time.get_ticks()-prevShoot>1500) #FS draws scene finally. It is passed every element that needs to be drawn 
+        drawScene(ship, listJunk, isAlive, currentScore, points, listBullets, time.get_ticks()-prevShoot> fireRate) #FS draws scene finally. It is passed every element that needs to be drawn 
     if (isAlive == False) and (keyEscape ==  True): running = False #FS if dead and exits
 
         
