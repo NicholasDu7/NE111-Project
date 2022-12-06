@@ -66,6 +66,7 @@ scoreFont = font.SysFont("calibri",30) #fonts
 mainTitleFont = font.SysFont('calibri', 60)
 secondTitleFont = font.SysFont('calibri', 45)
 framerate = 60 #FS NEW framerate no longer constant for hard mode
+hardmode = False
 
 def drawCutscene(): #FS used in the first five seconds to generate the cutscene
     screen.blit(mainTitleFont.render('SPACE JUNK', 1, WHITE), Rect(356, 150, 50, 50)) #Title
@@ -144,16 +145,19 @@ def iterPoints(ship, points, frenzy, score): #FS NEW this is the main function t
 def genBullet(ship): #FS NEW simple funtion to place the bullets in the right spot
     return [Rect(ship[0]+20, ship[1]+5, 25, 7)]
 
-def iterBullets(ljunk, lbullets): #FS NEW the main function that's executed each frame
+def iterBullets(ljunk, lbullets, hardmode): #FS NEW the main function that's executed each frame
     for x in range(len(ljunk)):
         for y in range(len(lbullets)):
             if y >= len(lbullets): break #FS NEW prevents errors
             if lbullets[y].colliderect(ljunk[x]): #FS NEW if the bullet hits junk
                 hitSound.play()
                 lbullets.pop(y) #FS NEW remove the considered bullet from the list
-                ljunk[x][1] += ljunk[x][2]//2 #FS NEW helps place the debris
-                ljunk[x][2] = 0
-                ljunk[x][3] = 0
+                if hardmode == True:
+                    ljunk[x][1] += ljunk[x][2]//2 #FS NEW helps place the debris
+                    ljunk[x][2] = 10
+                    ljunk[x][3] = 10
+                if hardmode == False: 
+                    ljunk.pop(x)
     for x in range(len(lbullets)): #FS NEW this loop moves the bullets acrooss the screen
         if x < len(lbullets):
             lbullets[x][0] += 10
@@ -216,6 +220,7 @@ while running:
         if keyH==True:
             cutscene = False
             framerate = 90
+            hardmode = True
 
     if (isAlive == True) and (cutscene == False): #FS while playing the game
 
@@ -238,7 +243,7 @@ while running:
         listJunk = createJunk(listJunk)
         listJunk = manipulateJunk(listJunk)
         isAlive = checkShipCollision(ship, listJunk)
-        (listJunk, listBullets) = iterBullets(listJunk, listBullets)
+        (listJunk, listBullets) = iterBullets(listJunk, listBullets, hardmode)
         (points, currentScore) = iterPoints(ship, points, frenzy, currentScore)
         drawScene(ship, listJunk, isAlive, currentScore, points, listBullets, time.get_ticks()-prevShoot> fireRate) #FS draws scene finally. It is passed every element that needs to be drawn 
     if (isAlive == False) and (keyEscape ==  True): running = False #FS if dead and exits
