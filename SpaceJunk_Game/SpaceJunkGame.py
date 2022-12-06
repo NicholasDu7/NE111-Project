@@ -9,21 +9,21 @@ Jeniton Augustinpillai (JA) @JenitonA (GitHub)
 
 '''
 
-import random #import needed modules
+import random #ND import needed modules
 import os
-os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" %(20, 20) #positions the window on the screen. If run nativley, that 20x20 position refers to offset down and right from the top-left of your monitor
-from pygame import * #import everything from pygame
-init() #initializes pygame
-SIZE = width, height = 1000, 700 #set the size of the screen
-screen = display.set_mode(SIZE) #defines the screen
-BLACK = (0, 0, 0) #defines basic colors
+os.environ['SDL_VIDEO_WINDOW_POS'] = "%d, %d" %(20, 20) #ND positions the window on the screen. If run nativley, that 20x20 position refers to offset down and right from the top-left of your monitor
+from pygame import * #ND import everything from pygame
+init() #ND initializes pygame
+SIZE = width, height = 1000, 700 #ND set the size of the screen
+screen = display.set_mode(SIZE) #ND defines the screen
+BLACK = (0, 0, 0) #ND defines basic colors
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 ORANGE = (255, 165, 0)
-myClock = time.Clock() #defines clock
-running = True #simple game state variable
+myClock = time.Clock() #ND defines clock
+running = True #ND simple game state variable
 playerSpeed = 5; # JA Variable that controls players speed
 fireRate = 500; # JA Variable that controls fire rate of bullets
 
@@ -126,7 +126,7 @@ def checkPointsCollision(ship, points, frenzy): #FS NEW added a new method to ch
     if frenzy==False: #FS NEW I put some redundancy for the planned 'frenzy' feature. I never got around to it. 
         if ship.colliderect(points[0]):
             points.pop(0)
-            coinSound.play()
+            coinSound.play() #ND plays audio for collecting a coin
             return (points, 1) #FS NEW returns both the new points list (with the expended point removed) and the number of points to add. 
         else: return (points, 0) 
     else: pass
